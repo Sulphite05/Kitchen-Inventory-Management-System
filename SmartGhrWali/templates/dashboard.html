@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Smart Ghr Wali
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1>
+
+<a class="btn btn-primary" href="{% url 'create_item' %}">Create Item</a>
+<div class="container row gap-3">
+    
+    <ol class="list-group list-group-numbered">
+        {% for item in items %}
+        <li class="list-group-item">{{ item.name }} 
+            <a class="btn btn-primary" href="{% url 'edit_item' item.id %}">Edit</a>
+            <a class="btn btn-primary" href="{% url 'delete_item' item.id %}">Delete</a>
+        </li>
+        {% endfor %}
+    </ol>
+    
+</div>
+{% endblock %}
