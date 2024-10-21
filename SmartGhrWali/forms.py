@@ -14,4 +14,4 @@ class PurchaseForm(forms.ModelForm):
 class UsageForm(forms.ModelForm):
     class Meta:
         model = Usage
-        fields = ['item', 'used_quantity', 'curr_quantity', 'min_quantity']
+        fields = ['item', 'used_quantity']
