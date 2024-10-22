@@ -41,3 +41,6 @@ def delete_item(request, item_id):
         item.delete()
         redirect("dashboard")
     return render(request, 'item_confirm_delete.html', {'item': item})
+
+# items shouldn't be deleted or edited by the user
+# only manage purchases and usage
