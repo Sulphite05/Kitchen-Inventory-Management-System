@@ -39,7 +39,7 @@ def delete_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id, user=request.user)
     if request.method == "POST":
         item.delete()
-        redirect("dashboard")
+        return redirect("dashboard")
     return render(request, 'item_confirm_delete.html', {'item': item})
 
 # items shouldn't be deleted or edited by the user
