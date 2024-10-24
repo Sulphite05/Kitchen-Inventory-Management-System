@@ -7,17 +7,44 @@ Smart Ghr Wali
 {% block content %}
 <h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1>
 
-<a class="btn btn-primary" href="{% url 'create_item' %}">Create Item</a>
-<div class="container row gap-3">
-    
-    <ol class="list-group list-group-numbered">
-        {% for item in items %}
-        <li class="list-group-item">{{ item.name }} 
-            <a class="btn btn-primary" href="{% url 'edit_item' item.id %}">Edit</a>
-            <a class="btn btn-primary" href="{% url 'delete_item' item.id %}">Delete</a>
-        </li>
-        {% endfor %}
-    </ol>
-    
+{% for category in categories %}
+<div class="card my-3">
+    <div class="card-header">
+        <h2 class="d-inline">{{ category.name }} ({{ category.item_set.count }} items)</h2>
+        <!-- Bootstrap Collapse Button -->
+        <button class="btn btn-primary float-end" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapse-{{ category.id }}" aria-expanded="false"
+            aria-controls="collapse-{{ category.id }}">
+            Show Items
+        </button>
+    </div>
+
+    <!-- Collapsible section for the items -->
+    <div class="collapse" id="collapse-{{ category.id }}">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Current Quantity</th>
+                        <th scope="col">Min Quantity</th>
+                        <th scope="col">Expiry Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in category.item_set.all %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.curr_quantity }}</td>
+                        <td>{{ item.min_quantity }}</td>
+                        <td>{% if item.expiry_date %}{{ item.expiry_date|date:"F j, Y" }}{% else %}N/A{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+{% endfor %}
+
 {% endblock %}
