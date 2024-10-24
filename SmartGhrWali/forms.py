@@ -1,16 +1,17 @@
+from inflect import engine
 from django import forms
 from django.utils.safestring import mark_safe
 from .models import Item, Category, Purchase, Usage
 
-class ItemForm(forms.ModelForm):
-    class Meta:
-        model = Item
-        fields = ['name', 'category', 'curr_quantity', 'min_quantity']
+# class ItemForm(forms.ModelForm):
+#     class Meta:
+#         model = Item
+#         fields = ['name', 'category', 'curr_quantity', 'min_quantity']
 
-class PurchaseForm(forms.ModelForm):
-    class Meta:
-        model = Purchase
-        fields = ['item', 'purchased_on', 'quantity', 'unit_price']
+# class PurchaseForm(forms.ModelForm):
+#     class Meta:
+#         model = Purchase
+#         fields = ['item', 'purchased_on', 'quantity', 'unit_price']
     
 class PurchaseForm(forms.ModelForm):
     # Single field for item name
@@ -31,7 +32,9 @@ class PurchaseForm(forms.ModelForm):
 
         # Check if the item already exists
         try:
-            item = Item.objects.get(name=item_name)
+            p = engine()
+            singular_item_name = p.singular_noun(item_name) or item_name    # convert item name to singular
+            item = Item.objects.get(name=singular_item_name)
             self.cleaned_data['item'] = item
         except Item.DoesNotExist:
             # If the item doesn't exist, ensure the user provides additional fields for the new item

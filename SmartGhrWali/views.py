@@ -1,15 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
-from.forms import ItemForm, PurchaseForm, UsageForm
+# from.forms import ItemForm, PurchaseForm, UsageForm
 # Create your views here.
 
 def index(request):
     return render(request, 'index.html')
 
 def dashboard(request):
-    # items = Item.objects.filter(user=request.user).order_by('-curr_quantity')
-    # return render(request, 'dashboard.html', {'items': items})
-    categories = Category.objects.prefetch_related('item_set')  # Efficiently get all categories with their items
+    categories = Category.objects.prefetch_related('item_set')  # gets all categories with their items
+    return render(request, 'dashboard.html', {'categories': categories})
+
+def dashboard(request):
+    categories = Category.objects.prefetch_related('item_set')  # gets all categories with their items
     return render(request, 'dashboard.html', {'categories': categories})
 
 # def create_item(request):
