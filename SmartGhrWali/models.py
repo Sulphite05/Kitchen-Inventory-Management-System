@@ -1,3 +1,4 @@
+from inflect import engine
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
@@ -15,10 +16,16 @@ class Item(models.Model):
     name = models.CharField(max_length=70, unique=True, blank=False, null=False)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)  # Protect category from deletion
     curr_quantity = models.IntegerField(blank=False, null=False)
-    min_quantity = models.IntegerField(blank=False, null=False)
-    expiry_date = models.DateField(null=True, blank=True)
+    min_quantity = models.DecimalField(blank=False, null=False, default=0.25, decimal_places=2, max_digits=10)
+    expiry_date = models.DateField(blank=True, null=True)
     # created_at = models.DateTimeField(auto_now_add=True)  # Automatically set the field when the object is created
     # updated_at = models.DateTimeField(auto_now=True)      # Automatically update the field every time the object is saved
+
+    def clean(self):
+        p = engine()
+        # Automatically convert name to singular if it's plural
+        if p.singular_noun(self.name):  # If the word is detected as plural
+            self.name = p.singular_noun(self.name)
 
     def __str__(self):
         return self.name
