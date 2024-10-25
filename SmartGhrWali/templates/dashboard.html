@@ -23,15 +23,15 @@ Smart Ghr Wali
     <div class="collapse" id="collapse-{{ category.id }}">
         <div class="card-body">
             <table class="table table-striped">
-                <thead>
+                <thead align="center">
                     <tr>
                         <th scope="col">Item Name</th>
-                        <th scope="col">Current Quantity</th>
-                        <th scope="col">Min Quantity</th>
+                        <th scope="col">Current Quantity ({{ category.unit }})</th>
+                        <th scope="col">Min Quantity ({{ category.unit }})</th>
                         <th scope="col">Expiry Date</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody align="center">
                     {% for item in category.item_set.all %}
                     <tr>
                         <td>{{ item.name }}</td>
