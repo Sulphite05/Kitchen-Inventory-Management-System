@@ -74,7 +74,19 @@ class PurchaseForm(forms.ModelForm):
         return super().save(commit=commit)
     
 class UsageForm(forms.ModelForm):
+    used_on = forms.DateField(required=True, widget=forms.SelectDateWidget, initial=now().date()) 
+    
     class Meta:
         model = Usage
         fields = ['item', 'used_quantity', 'used_on']
+    
+    def clean_used_quantity(self):
+        used_quantity = self.cleaned_data.get('used_quantity')
+        item = self.cleaned_data.get('item')
+
+        # Check if the item has enough quantity available
+        if item.curr_quantity < used_quantity:
+            self.add_error('used_quantity', f"Insufficient quantity of {item.name} to use.\nYou can only use {item.curr_quantity}{item.category.unit} or less.")
+
+        return used_quantity
 

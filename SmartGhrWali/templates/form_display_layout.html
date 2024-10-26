@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Smart Ghr Wali
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1>
+<div class="container my-4">
+    <h1 class="mb-4">{% block page_header %}Manage Your Items{% endblock %}</h1>
+
+    <!-- Form Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>{% block form_header %}Add New Item{% endblock %}</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn btn-primary">
+                    {% block button_text %}Add Item{% endblock %}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recent Items List -->
+    <h2>{% block list_header %}Your Recent Items{% endblock %}</h2>
+    <table class="table table-striped">
+        <thead align="center">
+            {% block table_headers %}
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            {% endblock %}
+        </thead>
+        <tbody align="center">
+            {% block table_rows %}
+            <tr>
+                <td colspan="4" class="text-center">No items found.</td>
+            </tr>
+            {% endblock %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

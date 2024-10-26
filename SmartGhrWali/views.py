@@ -48,7 +48,7 @@ def usages(request):
     usages = Usage.objects.filter(user=request.user,used_on__gte=today - timedelta(days=30)).order_by('-used_on')
 
     if request.method == 'POST':
-        form = UsageForm(request.POST, user=request.user)
+        form = UsageForm(request.POST)
         if form.is_valid():
             usage = form.save(commit=False)
             usage.user = request.user  # Associate the purchase with the current user
