@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Smart Ghr Wali
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1>
+<div class="container my-4">
+    <h1 class="mb-4">Manage Your Purchases</h1>
+
+    <!-- Purchase Form -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Add New Purchase</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }} <!-- Render the form fields -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Add Purchase</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Recent Purchases List -->
+    <h2>Your Recent Purchases (Last 30 Days)</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Date Purchased</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.item.name }}</td>
+                <td>{{ purchase.quantity }} {{ purchase.item.category.unit }}</td>
+                <td>{{ purchase.unit_price }} Rs/{{ purchase.item.category.unit }}</td>
+                <td>{{ purchase.purchased_on|date:"Y-m-d" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No purchases found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
