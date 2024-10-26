@@ -62,12 +62,11 @@ def purchases(request):
 #         form = ItemForm(instance=item) # previous instance
 #     return render(request, 'item_form.html', {'form': form})
 
-# def delete_item(request, item_id):
-#     item = get_object_or_404(Item, pk=item_id, user=request.user)
-#     if request.method == "POST":
-#         item.delete()
-#         return redirect("dashboard")
-#     return render(request, 'item_confirm_delete.html', {'item': item})
+def delete_purchase(request, purchase_id):
+    purchase = get_object_or_404(Purchase, id=purchase_id, user=request.user)
+    purchase.delete()
+    messages.success(request, 'Purchase has been deleted successfully!')
+    return redirect('purchases')
 
 # items shouldn't be deleted or edited by the user
 # only manage purchases and usage

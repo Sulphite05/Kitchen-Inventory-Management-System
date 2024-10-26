@@ -27,25 +27,51 @@ Smart Ghr Wali
             </form>
         </div>
     </div>
-    
+
     <!-- Recent Purchases List -->
     <h2>Your Recent Purchases (Last 30 Days)</h2>
     <table class="table table-striped">
-        <thead>
+        <thead align="center">
             <tr>
                 <th>Item</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Date Purchased</th>
+                <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody align="center">
             {% for purchase in purchases %}
             <tr>
                 <td>{{ purchase.item.name }}</td>
                 <td>{{ purchase.quantity }} {{ purchase.item.category.unit }}</td>
                 <td>{{ purchase.unit_price }} Rs/{{ purchase.item.category.unit }}</td>
                 <td>{{ purchase.purchased_on|date:"Y-m-d" }}</td>
+                                <td>
+                                    <!-- Delete button that triggers modal -->
+                                    <button class="btn btn-danger" data-toggle="modal"
+                                        data-target="#confirmDeleteModal{{ purchase.id }}">Delete</button>
+                                
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="confirmDeleteModal{{ purchase.id }}" tabindex="-1" role="dialog"
+                                        aria-labelledby="confirmDeleteModalLabel{{ purchase.id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="confirmDeleteModalLabel{{ purchase.id }}">Confirm Delete</h5>
+                                                    
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this purchase?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    <a href="{% url 'delete_purchase' purchase.id %}" class="btn btn-danger">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
             </tr>
             {% empty %}
             <tr>
