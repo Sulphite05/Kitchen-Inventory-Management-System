@@ -1,27 +1,33 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
-from django.utils.timezone import now, timedelta
-# from.forms import PurchaseForm
+from django.utils.timezone import timedelta, now
+from.forms import PurchaseForm
+from django.db.models import Prefetch
+from django.contrib import messages
+# Create your views here.
 
 def index(request):
     return render(request, 'index.html')
 
 def dashboard(request):
-    categories = Category.objects.prefetch_related('item_set')  # gets all categories with their items
+    categories = Category.objects.prefetch_related(Prefetch('item_set', queryset=Item.objects.filter(user=request.user)))
     return render(request, 'dashboard.html', {'categories': categories})
 
 def purchases(request):
+    today = now().date()
     # Fetch purchases made by the current user in the last 30 days
-    purchases = Purchase.objects.filter(purchased_on__gte=now() - timedelta(days=30)).order_by('-purchased_on')
+    purchases = Purchase.objects.filter(user=request.user,purchased_on__gte=today - timedelta(days=30)).order_by('-purchased_on')
+
     if request.method == 'POST':
         form = PurchaseForm(request.POST, user=request.user)
         if form.is_valid():
             purchase = form.save(commit=False)
             purchase.user = request.user  # Associate the purchase with the current user
             purchase.save()
+            messages.success(request, 'Item has been added successfully!')
             return redirect('purchases')  # Redirect to a 'purchases' page or wherever you want
     else:
-        form = PurchaseForm() # need to get only user's data
+        form = PurchaseForm()
 
     context = {
         'form': form,
