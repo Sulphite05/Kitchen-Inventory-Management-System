@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
 from django.utils.timezone import timedelta, now
-from.forms import PurchaseForm
+from.forms import PurchaseForm, UsageForm
 from django.db.models import Prefetch
 from django.contrib import messages
 # Create your views here.
@@ -24,7 +24,7 @@ def purchases(request):
             purchase = form.save(commit=False)
             purchase.user = request.user  # Associate the purchase with the current user
             purchase.save()
-            messages.success(request, 'Item has been added successfully!')
+            messages.success(request, 'Purchase has been added successfully!')
             return redirect('purchases')  # Redirect to a 'purchases' page or wherever you want
     else:
         form = PurchaseForm()
@@ -36,6 +36,40 @@ def purchases(request):
     
     return render(request, 'purchases.html', context)
 
+def delete_purchase(request, purchase_id):
+    purchase = get_object_or_404(Purchase, id=purchase_id, user=request.user)
+    purchase.delete()
+    messages.success(request, 'Purchase has been deleted successfully!')
+    return redirect('purchases')
+
+def usages(request):
+    today = now().date()
+    # Fetch purchases made by the current user in the last 30 days
+    usages = Usage.objects.filter(user=request.user,used_on__gte=today - timedelta(days=30)).order_by('-used_on')
+
+    if request.method == 'POST':
+        form = UsageForm(request.POST, user=request.user)
+        if form.is_valid():
+            usage = form.save(commit=False)
+            usage.user = request.user  # Associate the purchase with the current user
+            usage.save()
+            messages.success(request, 'Usage has been added successfully!')
+            return redirect('usages')  # Redirect to a 'purchases' page or wherever you want
+    else:
+        form = UsageForm()
+
+    context = {
+        'form': form,
+        'usages': usages,
+    }
+    
+    return render(request, 'usages.html', context)
+
+def delete_usage(request, usage_id):
+    usage = get_object_or_404(Usage, id=usage_id, user=request.user)
+    usage.delete()
+    messages.success(request, 'Usage has been deleted successfully!')
+    return redirect('usages')
 
 # def create_item(request):
 #     if request.method == "POST":
@@ -62,11 +96,4 @@ def purchases(request):
 #         form = ItemForm(instance=item) # previous instance
 #     return render(request, 'item_form.html', {'form': form})
 
-def delete_purchase(request, purchase_id):
-    purchase = get_object_or_404(Purchase, id=purchase_id, user=request.user)
-    purchase.delete()
-    messages.success(request, 'Purchase has been deleted successfully!')
-    return redirect('purchases')
 
-# items shouldn't be deleted or edited by the user
-# only manage purchases and usage
