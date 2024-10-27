@@ -7,44 +7,113 @@ Smart Ghr Wali
 {% block content %}
 <h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1>
 
-{% for category in categories %}
-<div class="card my-3">
-    <div class="card-header">
-        <h2 class="d-inline">{{ category.name }} ({{ category.item_set.count }} items)</h2>
-        <!-- Bootstrap Collapse Button -->
-        <button class="btn btn-primary float-end" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapse-{{ category.id }}" aria-expanded="false"
-            aria-controls="collapse-{{ category.id }}">
-            Show Items
-        </button>
-    </div>
+<!-- Button to Show/Hide Items -->
+<div class="text-center mb-3">
+    <button id="toggleItemsBtn" class="btn btn-info">Select Items to Generate Recipes</button>
+</div>
 
-    <!-- Collapsible section for the items -->
-    <div class="collapse" id="collapse-{{ category.id }}">
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead align="center">
-                    <tr>
-                        <th scope="col">Item Name</th>
-                        <th scope="col">Current Quantity ({{ category.unit }})</th>
-                        <th scope="col">Min Quantity ({{ category.unit }})</th>
-                        <th scope="col">Expiry Date</th>
-                    </tr>
-                </thead>
-                <tbody align="center">
-                    {% for item in category.item_set.all %}
-                    <tr>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.curr_quantity }}</td>
-                        <td>{{ item.min_quantity }}</td>
-                        <td>{% if item.expiry_date %}{{ item.expiry_date|date:"F j, Y" }}{% else %}N/A{% endif %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<!-- Recipe Form with Checkboxes -->
+<form method="POST" action="{% url 'fetch_recipes' %}" id="recipeForm">
+    {% csrf_token %}
+    {% for category in categories %}
+    <div class="card my-3">
+        <div class="card-header">
+            <h2 class="d-inline">{{ category.name }} ({{ category.item_set.count }} items)</h2>
+            <!-- Bootstrap Collapse Button -->
+            <button class="btn btn-primary float-end" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse-{{ category.id }}" aria-expanded="false"
+                aria-controls="collapse-{{ category.id }}">
+                Show Items
+            </button>
+        </div>
+
+        <!-- Collapsible section for the items, initially hidden -->
+        <div class="collapse" id="collapse-{{ category.id }}">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead align="center">
+                        <tr>
+                            <th scope="col" class="select-header" style="display: none;">Select</th> <!-- Initially hidden -->
+                            <th scope="col">Item Name</th>
+                            <th scope="col">Current Quantity ({{ category.unit }})</th>
+                            <th scope="col">Min Quantity ({{ category.unit }})</th>
+                            <th scope="col">Expiry Date</th>
+                        </tr>
+                    </thead>
+                    <tbody align="center">
+                        {% for item in category.item_set.all %}
+                        <tr>
+                            <td class="select-cell" style="display: none;">
+                                <input type="checkbox" class="item-checkbox" name="selected_items" value="{{ item.id }}">
+                            </td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.curr_quantity }}</td>
+                            <td>{{ item.min_quantity }}</td>
+                            <td>{% if item.expiry_date %}{{ item.expiry_date|date:"F j, Y" }}{% else %}N/A{% endif %}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No items available in this category.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-{% endfor %}
+    {% endfor %}
+
+    <!-- Submit Button -->
+    <div class="text-center my-4" id="submitButtonContainer" style="display: none;">
+        <button type="submit" class="btn btn-success" id="generateRecipesBtn">Generate Recipes</button>
+    </div>
+</form>
+
+<!-- JavaScript to Toggle Checkbox Visibility -->
+<script>
+    document.getElementById('toggleItemsBtn').onclick = function () {
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const selectHeader = document.querySelector('.select-header'); // Select header for toggling
+        const selectCells = document.querySelectorAll('.select-cell'); // Select cell for checkboxes
+        const submitButtonContainer = document.getElementById('submitButtonContainer'); // Submit button container
+
+        // Toggle visibility of the checkboxes
+        selectCells.forEach(cell => {
+            cell.style.display = cell.style.display === 'none' ? '' : 'none'; // Toggle cell visibility
+        });
+
+        // Toggle visibility of the select header
+        if (selectHeader) {
+            selectHeader.style.display = selectHeader.style.display === 'none' ? '' : 'none';
+        }
+
+        // Show or hide the submit button
+        if (submitButtonContainer) {
+            submitButtonContainer.style.display = submitButtonContainer.style.display === 'none' ? '' : 'none';
+        }
+    };
+
+    // Function to collapse all sections
+    function collapseAll() {
+        const collapsibleSections = document.querySelectorAll('.collapse'); // All collapsible sections
+        collapsibleSections.forEach(section => {
+            if (section.classList.contains('show')) {
+                // Collapse if already shown
+                bootstrap.Collapse.getInstance(section).hide();
+            }
+        });
+    }
+
+    // Expand all sections when generating recipes
+    document.getElementById('recipeForm').onsubmit = function () {
+        const collapsibleSections = document.querySelectorAll('.collapse'); // All collapsible sections
+        collapsibleSections.forEach(section => {
+            if (!section.classList.contains('show')) {
+                // Expand if not already shown
+                bootstrap.Collapse.getInstance(section).show();
+            }
+        });
+    };
+</script>
 
 {% endblock %}

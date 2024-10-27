@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Recipe Ideas
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4 text-center">Available Recipes</h1>
+
+    <!-- Recipe results will appear here -->
+    <div id="recipeResults" class="mt-4">
+        {% if recipes %}
+        {% for recipe in recipes %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ recipe.title }}</h5>
+                <p class="card-text">Ingredients: {{ recipe.ingredients }}</p>
+                <a href="{{ recipe.link }}" target="_blank" class="btn btn-primary">View Recipe</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-warning text-center">
+            Recipes with selected items can't be fetched.
+        </div>
+        {% endif %}
+    </div>
+    <a href="{{ dashboard }}" target="_blank" class="btn btn-primary">Return to Dashboard</a>
+</div>
+{% endblock %}

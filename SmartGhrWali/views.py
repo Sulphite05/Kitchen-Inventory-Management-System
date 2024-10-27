@@ -7,6 +7,8 @@ from django.utils.timezone import timedelta, now
 from.forms import PurchaseForm, UsageForm
 from django.db.models import Prefetch
 from django.contrib import messages
+import logging
+
 # Create your views here.
 
 def index(request):
@@ -78,66 +80,51 @@ def delete_usage(request, usage_id):
 def recipe_page(request):
     return render(request, "recipes.html")
 
+
+
+logger = logging.getLogger(__name__)
+
 def fetch_recipes(request):
-    # Retrieve ingredients from the inventory
-    ingredients = ",".join(item.name for item in Item.objects.filter(user=request.user, curr_quantity__gt=0))
-    url = "https://api.edamam.com/search"
-    
-    try:
-        # Make the API request with the appropriate parameters
-        response = requests.get(
-            url,
-            params={
-                "q": "Chicken, Fish, Meat",
-                "app_id": settings.EDAMAM_APP_ID,
-                "app_key": settings.EDAMAM_APP_KEY,
-                "from": 0,
-                "to": 5,  # Limit the number of recipes
-            },
+    if request.method == "POST":
+        selected_item_ids = request.POST.getlist("selected_items")
+
+        # Check if any items were selected
+        if not selected_item_ids:
+            return render(request, "recipes.html", {"error": "No ingredients selected."})
+
+        ingredients = ",".join(
+            item.name for item in Item.objects.filter(id__in=selected_item_ids)
         )
-        response.raise_for_status()  # Raise an error if the request fails
-        data = response.json()
-        print(data)
-        # Process the recipes data
-        recipes = [
-            {
-                "title": recipe["recipe"].get("label"),
-                "ingredients": ", ".join([ing["food"] for ing in recipe["recipe"].get("ingredients", [])]),
-                "link": recipe["recipe"].get("url")
-            }
-            for recipe in data.get("hits", [])
-        ]
-        get = JsonResponse({"recipes": recipes})
-        print('this:', get)
-        return get
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching recipes: {e}")
-        return JsonResponse({"error": "Failed to fetch recipes."}, status=500)
+        url = "https://api.edamam.com/search"
 
-# def create_item(request):
-#     if request.method == "POST":
-#         form  = ItemForm(request.POST, request.FILES) # gonna see the purpose of FILES
-#         if form.is_valid():
-#             item = form.save(commit=False) # commit is False, we don't wanna save it to database wihout user
-#             item.user = request.user
-#             item.save()
-#             return redirect('dashboard')
-#     else:
-#         form = ItemForm()
-#     return render(request, 'item_form.html', {'form': form})
+        try:
+            response = requests.get(
+                url,
+                params={
+                    "q": ingredients,
+                    "app_id": settings.EDAMAM_APP_ID,
+                    "app_key": settings.EDAMAM_APP_KEY,
+                    "from": 0,
+                    "to": 5,  # Limit the number of recipes
+                },
+            )
+            response.raise_for_status()  # Raise an error if the request fails
+            data = response.json()
 
-# def edit_item(request, item_id):
-#     item = get_object_or_404(Item, pk=item_id, user=request.user)
-#     if request.method == "POST":
-#         form  = ItemForm(request.POST, request.FILES, instance=item) # gonna see the purpose of FILES
-#         if form.is_valid:
-#             item = form.save(commit=False)
-#             item.user = request.user
-#             item.save()
-#             return redirect("dashboard")
-#     else:
-#         form = ItemForm(instance=item) # previous instance
-#     return render(request, 'item_form.html', {'form': form})
+            # Handle cases where the data structure might not be as expected
+            recipes = [
+                {
+                    "title": recipe["recipe"].get("label", "No Title"),
+                    "ingredients": ", ".join([ing["food"] for ing in recipe["recipe"].get("ingredients", [])]),
+                    "link": recipe["recipe"].get("url", "#"),
+                }
+                for recipe in data.get("hits", [])
+            ]
+            return render(request, "recipes.html", {"recipes": recipes})
 
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error fetching recipes: {e}")
+            return render(request, "recipes.html", {"error": "Failed to fetch recipes."})
 
+    return redirect("dashboard")  # Redirect to dashboard or any appropriate view
