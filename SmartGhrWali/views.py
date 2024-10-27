@@ -1,3 +1,6 @@
+import requests
+from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
 from django.utils.timezone import timedelta, now
@@ -70,6 +73,47 @@ def delete_usage(request, usage_id):
     usage.delete()
     messages.success(request, 'Usage has been deleted successfully!')
     return redirect('usages')
+
+
+def recipe_page(request):
+    return render(request, "recipes.html")
+
+def fetch_recipes(request):
+    # Retrieve ingredients from the inventory
+    ingredients = ",".join(item.name for item in Item.objects.filter(user=request.user, curr_quantity__gt=0))
+    url = "https://api.edamam.com/search"
+    
+    try:
+        # Make the API request with the appropriate parameters
+        response = requests.get(
+            url,
+            params={
+                "q": "Chicken, Fish, Meat",
+                "app_id": settings.EDAMAM_APP_ID,
+                "app_key": settings.EDAMAM_APP_KEY,
+                "from": 0,
+                "to": 5,  # Limit the number of recipes
+            },
+        )
+        response.raise_for_status()  # Raise an error if the request fails
+        data = response.json()
+        print(data)
+        # Process the recipes data
+        recipes = [
+            {
+                "title": recipe["recipe"].get("label"),
+                "ingredients": ", ".join([ing["food"] for ing in recipe["recipe"].get("ingredients", [])]),
+                "link": recipe["recipe"].get("url")
+            }
+            for recipe in data.get("hits", [])
+        ]
+        get = JsonResponse({"recipes": recipes})
+        print('this:', get)
+        return get
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching recipes: {e}")
+        return JsonResponse({"error": "Failed to fetch recipes."}, status=500)
 
 # def create_item(request):
 #     if request.method == "POST":
