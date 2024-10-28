@@ -24,7 +24,7 @@ def register(request):
             user.set_password(form.cleaned_data['password1'])
             user.save()
             login(request, user)
-            return redirect('dashboard')
+            return redirect('SmartGhrWali:dashboard')
 
     else:
         form = UserRegistrationForm()
@@ -151,4 +151,4 @@ def fetch_recipes(request):
             logger.error(f"Error fetching recipes: {e}")
             return render(request, "recipes.html", {"error": "Failed to fetch recipes."})
 
-    return redirect("dashboard")  # Redirect to dashboard or any appropriate view
+    return redirect('SmartGhrWali:dashboard') 

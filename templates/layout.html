@@ -42,8 +42,15 @@
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form> -->
-                <!-- {% if %} -->
-                <!-- <a href="{% url 'SmartGhrWali' %}" class="btn btn-primary"></a> -->
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-danger" type="submit">Log Out</a>
+                </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+                {% endif %}
+               
             </div>
         </div>
     </nav>
