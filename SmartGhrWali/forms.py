@@ -1,6 +1,7 @@
 from inflect import engine
 from django import forms
-from django.utils.safestring import mark_safe
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from .models import Item, Category, Purchase, Usage
 from django.utils.timezone import now
 
@@ -90,3 +91,10 @@ class UsageForm(forms.ModelForm):
 
         return used_quantity
 
+
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField()
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')

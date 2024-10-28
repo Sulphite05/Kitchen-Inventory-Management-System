@@ -13,7 +13,7 @@ Smart Ghr Wali
 </div>
 
 <!-- Recipe Form with Checkboxes -->
-<form method="POST" action="{% url 'fetch_recipes' %}" id="recipeForm">
+<form method="POST" action="{% url 'SmartGhrWali:fetch_recipes' %}" id="recipeForm">
     {% csrf_token %}
     {% for category in categories %}
     <div class="card my-3">

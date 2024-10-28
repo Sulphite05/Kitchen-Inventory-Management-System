@@ -4,9 +4,11 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
 from django.utils.timezone import timedelta, now
-from.forms import PurchaseForm, UsageForm
+from.forms import PurchaseForm, UsageForm, UserRegistrationForm
 from django.db.models import Prefetch
 from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 import logging
 
 # Create your views here.
@@ -14,10 +16,27 @@ import logging
 def index(request):
     return render(request, 'index.html')
 
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])
+            user.save()
+            login(request, user)
+            return redirect('dashboard')
+
+    else:
+        form = UserRegistrationForm()
+
+    return render(request, 'registration/register.html', {'form': form})
+
+@login_required
 def dashboard(request):
     categories = Category.objects.prefetch_related(Prefetch('item_set', queryset=Item.objects.filter(user=request.user)))
     return render(request, 'dashboard.html', {'categories': categories})
 
+@login_required
 def purchases(request):
     today = now().date()
     # Fetch purchases made by the current user in the last 30 days
@@ -41,12 +60,14 @@ def purchases(request):
     
     return render(request, 'purchases.html', context)
 
+@login_required
 def delete_purchase(request, purchase_id):
     purchase = get_object_or_404(Purchase, id=purchase_id, user=request.user)
     purchase.delete()
     messages.success(request, 'Purchase has been deleted successfully!')
     return redirect('purchases')
 
+@login_required
 def usages(request):
     today = now().date()
     # Fetch purchases made by the current user in the last 30 days
@@ -70,6 +91,7 @@ def usages(request):
     
     return render(request, 'usages.html', context)
 
+@login_required
 def delete_usage(request, usage_id):
     usage = get_object_or_404(Usage, id=usage_id, user=request.user)
     usage.delete()
@@ -77,6 +99,7 @@ def delete_usage(request, usage_id):
     return redirect('usages')
 
 
+@login_required
 def recipe_page(request):
     return render(request, "recipes.html")
 
@@ -84,6 +107,7 @@ def recipe_page(request):
 
 logger = logging.getLogger(__name__)
 
+@login_required
 def fetch_recipes(request):
     if request.method == "POST":
         selected_item_ids = request.POST.getlist("selected_items")
