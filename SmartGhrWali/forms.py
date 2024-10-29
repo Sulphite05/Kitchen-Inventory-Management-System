@@ -71,7 +71,6 @@ class PurchaseForm(forms.ModelForm):
             item.curr_quantity += self.cleaned_data["quantity"]  # Update quantity by adding the purchased amount
             item.save()
             self.instance.item = item
-        # Finally save the purchase
         return super().save(commit=commit)
     
 class UsageForm(forms.ModelForm):

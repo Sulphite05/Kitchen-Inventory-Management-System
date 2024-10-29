@@ -11,7 +11,6 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 import logging
 
-# Create your views here.
 
 def index(request):
     return render(request, 'index.html')
@@ -49,7 +48,7 @@ def purchases(request):
             purchase.user = request.user  # Associate the purchase with the current user
             purchase.save()
             messages.success(request, 'Purchase has been added successfully!')
-            return redirect('purchases')  # Redirect to a 'purchases' page or wherever you want
+            return redirect('purchases')  
     else:
         form = PurchaseForm()
 
@@ -77,10 +76,10 @@ def usages(request):
         form = UsageForm(request.POST)
         if form.is_valid():
             usage = form.save(commit=False)
-            usage.user = request.user  # Associate the purchase with the current user
+            usage.user = request.user 
             usage.save()
             messages.success(request, 'Usage has been added successfully!')
-            return redirect('usages')  # Redirect to a 'purchases' page or wherever you want
+            return redirect('usages')
     else:
         form = UsageForm()
 
@@ -130,10 +129,10 @@ def fetch_recipes(request):
                     "app_id": settings.EDAMAM_APP_ID,
                     "app_key": settings.EDAMAM_APP_KEY,
                     "from": 0,
-                    "to": 5,  # Limit the number of recipes
+                    "to": 5, 
                 },
             )
-            response.raise_for_status()  # Raise an error if the request fails
+            response.raise_for_status()  
             data = response.json()
 
             # Handle cases where the data structure might not be as expected

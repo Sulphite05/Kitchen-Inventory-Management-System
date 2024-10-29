@@ -23,7 +23,6 @@
     <td>{{ purchase.unit_price }} Rs/{{ purchase.item.category.unit }}</td>
     <td>{{ purchase.purchased_on|date:"Y-m-d" }}</td>
     <td>
-        <!-- Delete button that triggers modal -->
         <button class="btn btn-danger" data-toggle="modal"
             data-target="#confirmDeleteModal{{ purchase.id }}">Delete</button>
     

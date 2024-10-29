@@ -27,7 +27,7 @@ class Item(models.Model):
     def clean(self):
         p = engine()
         # Automatically convert name to singular if it's plural
-        if p.singular_noun(self.name):  # If the word is detected as plural
+        if p.singular_noun(self.name): 
             self.name = p.singular_noun(self.name)
 
     def __str__(self):
