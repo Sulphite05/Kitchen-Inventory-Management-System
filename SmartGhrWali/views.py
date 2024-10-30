@@ -151,3 +151,7 @@ def fetch_recipes(request):
             return render(request, "recipes.html", {"error": "Failed to fetch recipes."})
 
     return redirect('SmartGhrWali:dashboard') 
+
+# TODO: Add Report functionality
+# TODO: Allow AI category assignment
+# TODO: Forward misc items info to front-end
