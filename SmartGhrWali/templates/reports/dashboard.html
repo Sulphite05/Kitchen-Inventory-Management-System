@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- templates/reports/dashboard.html -->
+<h1>Reports Dashboard</h1>
+<ul>
+    <!-- <li><a href="{% url 'monthly_expenditure_report' %}">View Monthly Expenditure Report</a></li> -->
+    <li><a href="{% url 'monthly_expenditure_report' %}?download=pdf">Download Monthly Expenditure Report (PDF)</a></li>
+    <!-- <li><a href="{% url 'export_report_to_csv' %}">Download Monthly Expenditure Report (CSV)</a></li> -->
+    <!-- Repeat for other reports -->
+</ul>
+{% endblock %}

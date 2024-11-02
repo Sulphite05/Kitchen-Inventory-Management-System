@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}Monthly Expense Report{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="text-center">Monthly Expense Report</h1>
+    <p class="text-center">Generated on: {{ current_date }}</p>
+
+    <!-- Download PDF Button -->
+    <div class="text-center mb-3">
+        <a href="?format=pdf" class="btn btn-primary">Download PDF</a>
+    </div>
+
+    <!-- Table to Display Expenses -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.purchased_on|date:"Y-m-d" }}</td>
+                <td>{{ expense.item.name }}</td>
+                <td>{{ expense.quantity }}</td>
+                <td>{{ expense.unit_price }}</td>
+                <td>{{ expense.total_price }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No expenses found for this month.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Total Expense for the Month -->
+    <div class="text-end mt-3">
+        <h5>Total Monthly Expense: {{ total_expense }}</h5>
+    </div>
+</div>
+{% endblock %}

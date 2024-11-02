@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
 from django.utils.timezone import timedelta, now
@@ -9,7 +9,7 @@ from django.db.models import Prefetch, Sum, F, Q
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .utils import render_to_pdf
+from .utils import generate_pdf
 import logging
 
 
@@ -154,21 +154,23 @@ def fetch_recipes(request):
     return redirect('SmartGhrWali:dashboard') 
 
 
-def monthly_expenditure_report(request):
-    purchases = Purchase.objects.filter(
-        purchased_on__month=now().month
-    ).annotate(total_cost=F('quantity') * F('unit_price'))
-    total_spent = purchases.aggregate(total=Sum('total_cost'))['total']
+def monthly_expense_report(request):
+    # Query purchases and calculate total per month
+    expenses = Purchase.objects.filter(user=request.user).annotate(total_price=F('quantity') * F('unit_price')).order_by('purchased_on')
+    data = {
+        'headers': ['Date', 'Item', 'Quantity', 'Unit Price', 'Total Price'],
+        'rows': [(e.purchased_on, e.item.name, e.quantity, e.unit_price, e.total_price) for e in expenses],
+    }
 
-    if request.GET.get('download') == 'pdf':
-        return render_to_pdf('reports/monthly_expenditure.html', {
-            'purchases': purchases,
-            'total_spent': total_spent,
-        })
-    return render(request, 'reports/monthly_expenditure.html', {
-        'purchases': purchases,
-        'total_spent': total_spent,
-    })
+    if request.GET.get('format') == 'pdf':
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Monthly_Expense_Report.pdf"'
+        generate_pdf(response, "Monthly Expense Report", data)
+        return response
+
+    # Otherwise render HTML template
+    return render(request, 'reports/monthly_expense.html', {'expenses': expenses})
+
 # TODO: Add Report functionality
 # TODO: Allow AI category assignment
 # TODO: Forward misc items info to front-end
