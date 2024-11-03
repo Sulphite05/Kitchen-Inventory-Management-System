@@ -1,11 +1,10 @@
 {% extends "layout.html" %}
 
-{% block title %}Monthly Expense Report{% endblock %}
 
 {% block content %}
 <div class="container my-4">
     <h1 class="text-center">Monthly Expense Report</h1>
-    <p class="text-center">Generated on: {{ current_date }}</p>
+    <p class="text-center">Generated on: {% now "jS F, Y H:i A" %}</p>
 
     <!-- Download PDF Button -->
     <div class="text-center mb-3">

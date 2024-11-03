@@ -153,7 +153,7 @@ def fetch_recipes(request):
 
     return redirect('SmartGhrWali:dashboard') 
 
-
+@login_required
 def monthly_expense_report(request):
     # Query purchases and calculate total per month
     expenses = Purchase.objects.filter(user=request.user).annotate(total_price=F('quantity') * F('unit_price')).order_by('purchased_on')
@@ -170,6 +170,43 @@ def monthly_expense_report(request):
 
     # Otherwise render HTML template
     return render(request, 'reports/monthly_expense.html', {'expenses': expenses})
+
+@login_required
+def monthly_inventory_report(request):
+    month = now().month - 1
+    year = now().year
+    purchases = Purchase.objects.filter(
+        user=request.user, purchased_on__year=year, purchased_on__month=month
+    ).annotate(total_price=F('quantity') * F('unit_price'))
+
+    usages = Usage.objects.filter(
+        user=request.user, used_on__year=year, used_on__month=month
+    )
+
+    total_purchase_cost = purchases.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    total_usage_quantity = usages.aggregate(Sum('used_quantity'))['used_quantity__sum'] or 0
+    net_change = total_purchase_cost - total_usage_quantity
+
+    if request.GET.get('format') == 'pdf':
+        data = {
+        'headers': [['Date', 'Item', 'Quantity', 'Unit Price', 'Total Cost'], ['Date', 'Item', 'Quantity Used']],
+        'rows': [[(p.purchased_on.strftime("%Y-%m-%d"), p.item.name, p.quantity, p.unit_price, p.total_price) for p in purchases],
+                 [(u.used_on.strftime("%Y-%m-%d"), u.item.name, u.used_quantity) for u in usages]]}
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Monthly_Expense_Report.pdf"'
+        generate_pdf(response, "Monthly Inventory Report", data)
+        return response
+
+    context = {
+        'report_month': month,
+        'report_year': year,
+        'purchases': purchases,
+        'usages': usages,
+        'total_purchase_cost': total_purchase_cost,
+        'total_usage_quantity': total_usage_quantity,
+        'net_change': net_change,
+    }
+    return render(request, 'reports/monthly_inventory.html', context)
 
 # TODO: Add Report functionality
 # TODO: Allow AI category assignment
