@@ -3,11 +3,12 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
-from django.utils.timezone import timedelta, now
+from django.utils.timezone import timedelta, now, datetime
 from.forms import PurchaseForm, UsageForm, UserRegistrationForm
-from django.db.models import Prefetch, Sum, F, Q
+from django.db.models import Prefetch, Avg, Sum, F
 from django.contrib import messages
 from django.contrib.auth import login
+from django.db.models.functions import TruncMonth
 from django.contrib.auth.decorators import login_required
 from .utils import generate_pdf
 import logging
@@ -103,8 +104,6 @@ def delete_usage(request, usage_id):
 def recipe_page(request):
     return render(request, "recipes.html")
 
-
-
 logger = logging.getLogger(__name__)
 
 @login_required
@@ -171,43 +170,70 @@ def monthly_expense_report(request):
     # Otherwise render HTML template
     return render(request, 'reports/monthly_expense.html', {'expenses': expenses})
 
+
+def get_available_months():
+    purchase_months = Purchase.objects.annotate(month=TruncMonth('purchased_on')).values('month').distinct()
+    usage_months = Usage.objects.annotate(month=TruncMonth('used_on')).values('month').distinct()
+    # Combine and deduplicate months from purchases and usages
+    months = {month['month'].strftime("%Y-%m") for month in list(purchase_months) + list(usage_months)}
+    # Convert to sorted list of (month, year) tuples
+    return sorted([(datetime.strptime(m, "%Y-%m").month, datetime.strptime(m, "%Y-%m").year) for m in months], reverse=True)
+
+@login_required
+def report_download_page(request):
+    available_months = get_available_months()
+    # For form month and year options
+    months = [{'value': i, 'label': datetime(2023, i, 1).strftime('%B')} for i in range(1, 13)]
+    years = range(datetime.now().year - 5, datetime.now().year + 1)
+    return render(request, 'reports/monthly_inventory.html', {'available_months': available_months, 'months': months, 'years': years})
+
 @login_required
 def monthly_inventory_report(request):
-    month = now().month - 1
-    year = now().year
-    purchases = Purchase.objects.filter(
-        user=request.user, purchased_on__year=year, purchased_on__month=month
-    ).annotate(total_price=F('quantity') * F('unit_price'))
-
-    usages = Usage.objects.filter(
-        user=request.user, used_on__year=year, used_on__month=month
-    )
-
-    total_purchase_cost = purchases.aggregate(Sum('total_price'))['total_price__sum'] or 0
-    total_usage_quantity = usages.aggregate(Sum('used_quantity'))['used_quantity__sum'] or 0
-    net_change = total_purchase_cost - total_usage_quantity
-
     if request.GET.get('format') == 'pdf':
+        month = int(request.GET.get('month'))
+        year = int(request.GET.get('year'))
+        purchases = Purchase.objects.filter(
+            user=request.user, purchased_on__year=year, purchased_on__month=month
+        ).annotate(total_price=F('quantity') * F('unit_price'))
+        usages = Usage.objects.filter(
+            user=request.user, used_on__year=year, used_on__month=month
+        )
+        total_purchase_cost = purchases.aggregate(Sum('total_price'))['total_price__sum'] or 0
+        total_purchased_qty = purchases.aggregate(total_qty=Sum('quantity'))['total_qty'] or 0
+        total_usage_quantity = usages.aggregate(total_qty=Sum('used_quantity'))['total_qty'] or 0
+        net_change = total_purchased_qty - total_usage_quantity
+        most_purchased = purchases.values('item__name').annotate(total_qty=Sum('quantity')).order_by('-total_qty').first()
+        most_purchased_item_name = most_purchased['item__name'] if most_purchased else 'N/A'
+        most_purchased_item_quantity = most_purchased['total_qty'] if most_purchased else 0
+        most_used = usages.values('item__name').annotate(total_qty=Sum('used_quantity')).order_by('-total_qty').first()
+        most_used_item_name = most_used['item__name'] if most_used else 'N/A'
+        most_used_item_quantity = most_used['total_qty'] if most_used else 0
+        average_purchase_cost_per_item = purchases.aggregate(avg_cost=Avg('total_price'))['avg_cost'] or 0
+        total_unique_items_purchased = purchases.values('item').distinct().count()
+        total_unique_items_used = usages.values('item').distinct().count()
+
         data = {
-        'headers': [['Date', 'Item', 'Quantity', 'Unit Price', 'Total Cost'], ['Date', 'Item', 'Quantity Used']],
-        'rows': [[(p.purchased_on.strftime("%Y-%m-%d"), p.item.name, p.quantity, p.unit_price, p.total_price) for p in purchases],
-                 [(u.used_on.strftime("%Y-%m-%d"), u.item.name, u.used_quantity) for u in usages]]}
+            'headers': [['Date', 'Item', 'Quantity', 'Unit Price', 'Total Cost'], ['Date', 'Item', 'Quantity Used']],
+            'rows': [[(p.purchased_on.strftime("%Y-%m-%d"), p.item.name, str(p.quantity)+f' {p.item.category.unit}', 'Rs. '+str(p.unit_price), 'Rs. '+str(p.total_price)) for p in purchases],
+                     [(u.used_on.strftime("%Y-%m-%d"), u.item.name, str(u.used_quantity)+f' {u.item.category.unit}') for u in usages]]
+        }
+        summary = {
+            'total_purchase_cost': total_purchase_cost,  # Sum of all purchases
+            'total_purchase_quantity': total_purchased_qty,
+            'total_usage_quantity': total_usage_quantity,  # Sum of all quantities used
+            'net_change': net_change,  # Purchased quantity - used quantity
+            'most_purchased_item': {'name': most_purchased_item_name, 'quantity': most_purchased_item_quantity},
+            'most_used_item': {'name': most_used_item_name, 'quantity': most_used_item_quantity},
+            'average_purchase_cost_per_item': average_purchase_cost_per_item,  # Average cost of each purchase
+            'total_unique_items_purchased': total_unique_items_purchased,
+            'total_unique_items_used': total_unique_items_used
+        }
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="Monthly_Expense_Report.pdf"'
-        generate_pdf(response, "Monthly Inventory Report", data)
+        response['Content-Disposition'] = f'attachment; filename="Inventory_Report_{year}_{month}.pdf"'
+        generate_pdf(response, "Monthly Inventory Report", data, summary)
         return response
 
-    context = {
-        'report_month': month,
-        'report_year': year,
-        'purchases': purchases,
-        'usages': usages,
-        'total_purchase_cost': total_purchase_cost,
-        'total_usage_quantity': total_usage_quantity,
-        'net_change': net_change,
-    }
-    return render(request, 'reports/monthly_inventory.html', context)
+    return HttpResponse("Only PDF download is available for this report.")
 
-# TODO: Add Report functionality
 # TODO: Allow AI category assignment
 # TODO: Forward misc items info to front-end

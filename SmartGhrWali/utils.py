@@ -1,108 +1,106 @@
 from reportlab.lib.pagesizes import A4
-# from reportlab.pdfgen import canvas
-from datetime import datetime
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.graphics.charts.barcharts import VerticalBarChart
+from reportlab.graphics.shapes import Drawing
+from datetime import datetime
+from reportlab.graphics.charts.legends import Legend
 
-# def generate_pdf(response, title, data):
-#     # Set up the PDF canvas
-#     # p = canvas.Canvas(response, pagesize=A4)
-#     p = SimpleDocTemplate(response, pagesize=A4)
-#     width, height = A4
-#     y_position = height - 50  # Starting Y position for content
-
-#     # Add title
-#     p.setFont("Helvetica-Bold", 18)
-#     p.drawString(50, y_position, title)
-#     y_position -= 30
-
-#     # Add timestamp
-#     p.setFont("Helvetica", 10)
-#     p.drawString(50, y_position, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-#     y_position -= 30
-
-#     # Purchase Title
-#     p.setFont("Helvetica-Bold", 14)
-#     p.drawString(50, y_position, 'Purchases')
-#     y_position -= 25
-
-#     # Purchase headers
-#     p.setFont("Helvetica-Bold", 12)
-#     purchase_head = data['headers'][0]
-#     columns_px = [50, 150, 250, 350, 450]
-
-#     for i, header in enumerate(purchase_head):
-#         p.drawString(columns_px[i], y_position, header)
-#     y_position -= 20
-    
-#     # Purchase rows
-#     purchases = data['rows'][0]
-#     p.setFont("Helvetica", 10)
-#     for row in purchases:
-#         for i, item in enumerate(row):
-#             p.drawString(columns_px[i], y_position, str(item))
-#         y_position -= 20
-#     y_position -= 25
-
-#     # Usage Title
-#     p.setFont("Helvetica-Bold", 14)
-#     p.drawString(50, y_position, 'Usages')
-#     y_position -= 25
-    
-#     # Usage headers
-#     p.setFont("Helvetica-Bold", 14)
-#     usage_head = data['headers'][1]
-#     columns_ux = [50, 250, 450]
-
-#     for i, header in enumerate(usage_head):
-#         p.drawString(columns_ux[i], y_position, header)
-#     y_position -= 20
-    
-#     # Usage rows
-#     usages = data['rows'][1]
-#     p.setFont("Helvetica", 10)
-#     for row in usages:
-#         for i, item in enumerate(row):
-#             p.drawString(columns_ux[i], y_position, str(item))
-#         y_position -= 20  
-
-#     p.showPage()
-#     p.save()
-
-def generate_pdf(response, title, data):
-    # Create the PDF object
+def generate_pdf(response, title, data, summary):
     doc = SimpleDocTemplate(response, pagesize=A4)
-    elements = []  # Store elements like table and title
-    title = ['Purchases', 'Usages']
-    # Title
-    for i in range(2):
-        styles = getSampleStyleSheet()
-        title_style = styles['Title']
-        title_style.fontSize = 18
-        title_style.leading = 22  # Space between lines
-        elements.append(Paragraph(title[i], title_style))
-        
-        # Table Data (headers + rows)
-        table_data = [data['headers'][i]] + data['rows'][i]
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Title Page
+    title_style = ParagraphStyle(name='Title', fontSize=24, alignment=1, spaceAfter=20)
+    elements.append(Paragraph("Monthly Inventory Report", title_style))
+    
+    subtitle_style = ParagraphStyle(name='Subtitle', fontSize=14, alignment=1, spaceAfter=30)
+    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", subtitle_style))
 
-        # Create table with data
-        table = Table(table_data)
-        
-        # Style the table
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),      # Header background
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke), # Header text color
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),             # Center align
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),   # Header font
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),            # Padding for header
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),       # Grid lines
-        ]))
+    # Purchases Table
+    elements.append(Paragraph("Purchases", styles['Heading2']))
+    purchases_data = [data['headers'][0]] + data['rows'][0]
+    purchases_table = Table(purchases_data, colWidths=[80, 120, 80, 80, 100])
+    purchases_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    elements.append(purchases_table)
+    elements.append(Spacer(1, 12))
 
-        # Add the table to elements
-        elements.append(table)
+    elements.append(PageBreak())
 
-    # Build the PDF
+    # Usages Table
+    elements.append(Paragraph("Usages", styles['Heading2']))
+    usages_data = [data['headers'][1]] + data['rows'][1]
+    usages_table = Table(usages_data, colWidths=[120, 180, 100])
+    usages_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    elements.append(usages_table)
+    elements.append(Spacer(1, 20))
+
+    elements.append(PageBreak())
+
+    # Chart Section
+    elements.append(Paragraph("Monthly Purchase and Usage Chart", styles['Heading2']))
+    drawing = Drawing(400, 200)
+    bar_chart = VerticalBarChart()
+    bar_chart.width = 350
+    bar_chart.height = 150
+    bar_chart.data = [[float(summary['total_purchase_cost'])], [float(summary['total_usage_quantity'])]]
+    bar_chart.categoryAxis.categoryNames = ['Purchases', 'Usages']
+    bar_chart.valueAxis.valueMin = 0
+    bar_chart.valueAxis.valueMax = float(max(summary['total_purchase_cost'], summary['total_usage_quantity'])) * 1.2
+    num = int(bar_chart.valueAxis.valueMax / 5)
+    bar_chart.valueAxis.valueStep = num if num else int(bar_chart.valueAxis.valueMax) # to escape zeroDivisionError
+    bar_chart.bars[0].fillColor = colors.blue
+    bar_chart.bars[1].fillColor = colors.green
+
+    # Legend
+    legend = Legend()
+    legend.alignment = 'right'
+    legend.x = 340
+    legend.y = 150
+    legend.fontName = 'Helvetica'
+    legend.fontSize = 10
+    legend.boxAnchor = 'ne'
+    legend.columnMaximum = 3
+    legend.colorNamePairs = [(colors.blue, 'Purchases'), (colors.green, 'Usages')]
+    drawing.add(bar_chart)
+    drawing.add(legend)
+    elements.append(drawing)
+
+    # Summary Section
+    elements.append(Paragraph("Summary", styles['Heading2']))
+    summary_data = [
+        ["Total Purchase Cost", f"{summary['total_purchase_cost']}"],
+        ["Total Purchase Quantity", f"{summary['total_purchase_quantity']}"],
+        ["Total Usage Quantity", f"{summary['total_usage_quantity']}"],
+        ["Net Change", f"{summary['net_change']}"]
+    ]
+    summary_table = Table(summary_data, colWidths=[200, 200])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    elements.append(summary_table)
+    elements.append(Spacer(1, 12))
+
+    # Build PDF
     doc.build(elements)

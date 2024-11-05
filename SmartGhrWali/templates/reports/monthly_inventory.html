@@ -1,68 +1,19 @@
 {% extends "layout.html" %}
 
-{% block title %}Monthly Inventory Report{% endblock %}
+{% block title %}Download Monthly Inventory Reports{% endblock %}
 
 {% block content %}
 <div class="container my-4">
-    <h1 class="text-center">Monthly Inventory Report</h1>
-    <p class="text-center">For {{ report_month }} {{ report_year }}</p>
+    <h1 class="text-center">Monthly Inventory Report Downloads</h1>
 
-    <!-- Download PDF Button -->
-    <div class="text-center mb-3">
-        <a href="?format=pdf" class="btn btn-primary">Download PDF</a>
+    <hr>
+    <div class="list-group">
+        {% for month, year in available_months %}
+        <a href="{% url 'SmartGhrWali:inventory_report' %}?month={{ month }}&year={{ year }}&format=pdf"
+            class="list-group-item list-group-item-action">
+            Download {{ month }}/{{ year }} Report
+        </a>
+        {% endfor %}
     </div>
-
-    <h2>Summary</h2>
-    <ul>
-        <li>Total Purchases: {{ total_purchases }}</li>
-        <li>Total Usages: {{ total_usages }}</li>
-        <li>Net Change: {{ net_change }}</li>
-    </ul>
-
-    <h2>Purchases</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Total Cost</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for purchase in purchases %}
-            <tr>
-                <td>{{ purchase.purchased_on|date:"Y-m-d" }}</td>
-                <td>{{ purchase.item.name }}</td>
-                <td>{{ purchase.quantity }}</td>
-                <td>{{ purchase.unit_price }}</td>
-                <td>{{ purchase.total_price }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p>Total Monthly Purchase Cost: {{ total_purchase_cost }}</p>
-
-    <h2>Usages</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Item</th>
-                <th>Quantity Used</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usage in usages %}
-            <tr>
-                <td>{{ usage.used_on|date:"Y-m-d" }}</td>
-                <td>{{ usage.item.name }}</td>
-                <td>{{ usage.used_quantity }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p>Total Monthly Usage: {{ total_usage_quantity }}</p>
 </div>
 {% endblock %}
