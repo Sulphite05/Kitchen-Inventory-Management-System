@@ -12,8 +12,6 @@ urlpatterns = [
     path("recipes/", views.recipe_page, name="recipe_page"),
     path("recipes/fetch_recipes/", views.fetch_recipes, name="fetch_recipes"),
     path("register/", views.register, name="register"),
-    # path("<int:item_id>/edit/", views.edit_item, name="edit_item"),
-    # path("<int:item_id>/delete/", views.delete_item, name="delete_item"),
-    # path("", views.index, name="index"),
-    # path("", views.index, name="index"),
+    path("reports/inventory/", views.monthly_inventory_report, name='inventory_report'),
+    path("reports/monthly-inventory/", views.report_download_page, name='monthly_inventory_report'),
 ]

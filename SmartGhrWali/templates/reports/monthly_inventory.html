@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Download Monthly Inventory Reports{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="text-center">Monthly Inventory Report Downloads</h1>
+
+    <hr>
+    <div class="list-group">
+        {% for month, year in available_months %}
+        <a href="{% url 'SmartGhrWali:inventory_report' %}?month={{ month }}&year={{ year }}&format=pdf"
+            class="list-group-item list-group-item-action">
+            Download {{ month }}/{{ year }} Report
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
