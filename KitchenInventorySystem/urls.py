@@ -23,5 +23,6 @@ from django.contrib.auth.urls import views as auth_views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("SmartGhrWali/", include("SmartGhrWali.urls")),
-    path("accounts/", include('django.contrib.auth.urls'))
+    path("accounts/", include('django.contrib.auth.urls')),
+    path("", include("SmartGhrWali.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
