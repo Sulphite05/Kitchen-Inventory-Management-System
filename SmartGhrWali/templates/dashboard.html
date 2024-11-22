@@ -5,28 +5,83 @@ Smart Ghr Wali
 {% endblock %}
 
 {% block content %}
-<h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1>
+<link rel="stylesheet" href="/static/css/dashboard.css">
+<link rel="stylesheet" href="/static/css/homepage.css">
+<!-- <h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1> -->
 
+<div class="card  shadow p-3 bg-body roundedp-5 m-3 ">
+ <h4 class="mb-4 fw-bold">INVENTORY</h4>
+ <div class="row g-3">
+      <!-- Total items Card -->
+      <div class="col-md-3">
+        <div class="card mb-3 p-3 shadow text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#128176;</div>
+                <h5 class="mb-0">Total Items</h5>
+            </div>
+            <!-- Centered large text -->
+            <h2 class="my-3">53</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card mb-3 p-3 shadow text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#128722;</div>
+                <h5 class="mb-0">High Stock </h5>
+            </div>
+            <h2 class="my-3">18</h2>
+        </div>
+    </div>
+    
+      <div class="col-md-3">
+        <div class="card mb-3 p-3 shadow text-center">
+          <div class="d-flex align-items-center justify-content-center mb-3">
+                <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#10060;</div>
+                <h5 class="mb-0">Out of Stock </h5>
+            </div>
+            <h2 class="my-3">11</h2>
+        </div>
+    </div>
+    
+      <div class="col-md-3">
+        <div class="card mb-3 p-3 shadow text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#9888;</div>
+                <h5 class="mb-0">Low Stock</h5>
+            </div>
+            <h2 class="my-3">24</h2>
+        </div>
+    </div>
+    
+    </div>
+    </div>
+    <div class="container">
+        <button id="toggleItemsBtn" class="btn btn-info mb-3">Select Items to Generate Recipes</button>
+    </div>
 <!-- Button to Show/Hide Items -->
-<div class="text-center mb-3">
-    <button id="toggleItemsBtn" class="btn btn-info">Select Items to Generate Recipes</button>
-</div>
+ <section>
+    <div class="card  shadow p-3  bg-body roundedp-5 m-3">
+
+<h4 class=" mb-4 fw-bold">ALL CATEGORIES</h4>
 
 <!-- Recipe Form with Checkboxes -->
 <form method="POST" action="{% url 'SmartGhrWali:fetch_recipes' %}" id="recipeForm">
     {% csrf_token %}
     {% for category in categories %}
     <div class="card my-3">
-        <div class="card-header">
-            <h2 class="d-inline">{{ category.name }} ({{ category.item_set.count }} items)</h2>
-            <!-- Bootstrap Collapse Button -->
-            <button class="btn btn-primary float-end" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapse-{{ category.id }}" aria-expanded="false"
-                aria-controls="collapse-{{ category.id }}">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <!-- Heading aligned to the left -->
+            <h6 class="mb-0 fw-bold">{{ category.name }} ({{ category.item_set.count }} items)</h6>
+        
+            <!-- Button aligned to the right -->
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse-{{ category.id }}" aria-expanded="false" 
+                aria-controls="collapse-{{ category.id }}" style="width: auto;">
                 Show Items
             </button>
         </div>
-
+        
         <!-- Collapsible section for the items, initially hidden -->
         <div class="collapse" id="collapse-{{ category.id }}">
             <div class="card-body">
@@ -61,6 +116,7 @@ Smart Ghr Wali
             </div>
         </div>
     </div>
+    
     {% endfor %}
 
     <!-- Submit Button -->
@@ -68,7 +124,8 @@ Smart Ghr Wali
         <button type="submit" class="btn btn-success" id="generateRecipesBtn">Generate Recipes</button>
     </div>
 </form>
-
+</div>
+</section>
 <!-- JavaScript to Toggle Checkbox Visibility -->
 <script>
     document.getElementById('toggleItemsBtn').onclick = function () {

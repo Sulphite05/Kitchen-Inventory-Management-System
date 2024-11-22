@@ -1,12 +1,11 @@
-
-input, select, textarea, button {
-    width: 100%;
+input, select, textarea {
     padding: 12px 20px;
     margin-bottom: 15px;
     border-radius: 5px;
     border: 1px solid #ddd;
     font-size: 16px;
     box-sizing: border-box;
+    
 }
 
 input:focus, select:focus, textarea:focus {
