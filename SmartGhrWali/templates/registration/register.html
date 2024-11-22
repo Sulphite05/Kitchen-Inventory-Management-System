@@ -1,9 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="btn btn-primary">Register</button>
-</form>
+<!-- Bootstrap Container for centering content with space from header -->
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh; padding-top: 50px;">
+    <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%; border-radius: 15px;">
+        <h2 class="text-center mb-4">Register</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block rounded-pill">Register</button>
+        </form>
+        <p class="mt-3 text-center">Already have an account? <a href="{% url 'login' %}">Log in here!</a></p>
+    </div>
+</div>
 {% endblock %}

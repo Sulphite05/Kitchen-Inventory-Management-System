@@ -1,0 +1,685 @@
+
+:root {
+    --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --heading-font: "Raleway",  sans-serif;
+    --nav-font: "Poppins",  sans-serif;
+  }
+  
+  /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
+  :root { 
+    --background-color: #ffffff; /* Background color for the entire website, including individual sections */
+    --default-color: #444444; /* Default color used for the majority of the text content across the entire website */
+    --heading-color: #384046; /* Color for headings, subheadings and title throughout the website */
+    --accent-color: #078fca; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+    --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
+    --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
+  }
+  
+ 
+  
+  /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
+  
+  .light-background {
+    --background-color: #f7fbfe;
+    --surface-color: #ffffff;
+  }
+  
+  .dark-background {
+    --background-color: #1d222d;
+    --default-color: #ffffff;
+    --heading-color: #ffffff;
+    --surface-color: #31394c;
+    --contrast-color: #ffffff;
+  }
+  
+  /* Smooth scroll */
+  :root {
+    scroll-behavior: smooth;
+  }
+  
+  /*--------------------------------------------------------------
+  # General Styling & Shared Classes
+  --------------------------------------------------------------*/
+  body {
+    color: var(--default-color);
+    background-color: var(--background-color);
+    font-family: var(--default-font);
+  }
+  
+  a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  
+  a:hover {
+    color: color-mix(in srgb, var(--accent-color), transparent 25%);
+    text-decoration: none;
+  }
+  
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--heading-color);
+    font-family: var(--heading-font);
+  }
+  
+
+
+  /*--------------------------------------------------------------
+  # Global Footer
+  --------------------------------------------------------------*/
+  .footer {
+    color: var(--default-color);
+    background-color: var(--background-color);
+    font-size: 14px;
+    padding-bottom: 50px;
+    position: relative;
+  }
+  
+  .footer .footer-top {
+    padding-top: 50px;
+  }
+  
+  .footer .footer-about .logo {
+    line-height: 1;
+    margin-bottom: 25px;
+  }
+  
+  .footer .footer-about .logo img {
+    max-height: 40px;
+    margin-right: 6px;
+  }
+  
+  .footer .footer-about .logo span {
+    color: var(--heading-color);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: var(--heading-font);
+  }
+  
+  .footer .footer-about p {
+    font-size: 14px;
+    font-family: var(--heading-font);
+  }
+  
+  .footer .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--default-color), transparent 50%);
+    font-size: 16px;
+    color: color-mix(in srgb, var(--default-color), transparent 50%);
+    margin-right: 10px;
+    transition: 0.3s;
+  }
+  
+  .footer .social-links a:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+  }
+  
+  .footer h4 {
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+    padding-bottom: 12px;
+  }
+  
+  .footer .footer-links {
+    margin-bottom: 30px;
+  }
+  
+  .footer .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer .footer-links ul i {
+    padding-right: 2px;
+    font-size: 12px;
+    line-height: 0;
+  }
+  
+  .footer .footer-links ul li {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .footer .footer-links ul li:first-child {
+    padding-top: 0;
+  }
+  
+  .footer .footer-links ul a {
+    color: color-mix(in srgb, var(--default-color), transparent 20%);
+    display: inline-block;
+    line-height: 1;
+  }
+  
+  .footer .footer-links ul a:hover {
+    color: var(--accent-color);
+  }
+  
+  .footer .footer-contact p {
+    margin-bottom: 5px;
+  }
+  
+  .footer .copyright {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background-color: color-mix(in srgb, var(--default-color), transparent 95%);
+  }
+  
+  .footer .copyright p {
+    margin-bottom: 0;
+  }
+  
+  .footer .credits {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+  
+  /*--------------------------------------------------------------
+  # Preloader
+  --------------------------------------------------------------*/
+  #preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    overflow: hidden;
+    background: var(--background-color);
+    transition: all 0.6s ease-out;
+  }
+  
+  #preloader:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #ffffff;
+    border-color: var(--accent-color) transparent var(--accent-color) transparent;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: animate-preloader 1.5s linear infinite;
+  }
+  
+  @keyframes animate-preloader {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /*--------------------------------------------------------------
+  # Scroll Top Button
+  --------------------------------------------------------------*/
+  .scroll-top {
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+    right: 15px;
+    bottom: 15px;
+    z-index: 99999;
+    background-color: var(--accent-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    transition: all 0.4s;
+  }
+  
+  .scroll-top i {
+    font-size: 24px;
+    color: var(--contrast-color);
+    line-height: 0;
+  }
+  
+  .scroll-top:hover {
+    background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+    color: var(--contrast-color);
+  }
+  
+  .scroll-top.active {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  /*--------------------------------------------------------------
+  # Disable aos animation delay on mobile devices
+  --------------------------------------------------------------*/
+  @media screen and (max-width: 768px) {
+    [data-aos-delay] {
+      transition-delay: 0 !important;
+    }
+  }
+  
+  /*--------------------------------------------------------------
+  # Global Page Titles & Breadcrumbs
+  --------------------------------------------------------------*/
+  .page-title {
+    color: var(--default-color);
+    background-color: var(--background-color);
+    padding: 25px 0;
+    position: relative;
+  }
+  
+  .page-title h1 {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  
+  .page-title .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  
+  .page-title .breadcrumbs ol li+li {
+    padding-left: 10px;
+  }
+  
+  .page-title .breadcrumbs ol li+li::before {
+    content: "/";
+    display: inline-block;
+    padding-right: 10px;
+    color: color-mix(in srgb, var(--default-color), transparent 70%);
+  }
+  
+  /*--------------------------------------------------------------
+  # Global Sections
+  --------------------------------------------------------------*/
+  section,
+  .section {
+    color: var(--default-color);
+    background-color: var(--background-color);
+    padding: 40px 0;
+    scroll-margin-top: 84px;
+    overflow: clip;
+  }
+  
+  @media (max-width: 1199px) {
+  
+    section,
+    .section {
+      scroll-margin-top: 76px;
+    }
+  }
+  
+  /*--------------------------------------------------------------
+  # Global Section Titles
+  --------------------------------------------------------------*/
+  .section-title {
+    text-align: center;
+    padding-bottom: 60px;
+    position: relative;
+  }
+  
+  .section-title h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: relative;
+  }
+  
+  .section-title h2:before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 160px;
+    height: 1px;
+    background: color-mix(in srgb, var(--default-color), transparent 60%);
+    left: 0;
+    right: 0;
+    bottom: 1px;
+    margin: auto;
+  }
+  
+  .section-title h2::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+  }
+  
+  .section-title p {
+    margin-bottom: 0;
+  }
+  
+  /*--------------------------------------------------------------
+  # Hero Section
+  --------------------------------------------------------------*/
+  .hero {
+    width: 100%;
+    min-height: 60vh;
+    position: relative;
+    padding: 80px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .hero img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+  
+  .hero:before {
+    content: "";
+    /* background: color-mix(in srgb, var(--background-color), transparent 30%); */
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+  
+  .hero .container {
+    position: relative;
+    z-index: 3;
+  }
+  
+  .hero h2 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 700;
+  }
+  
+  .hero p {
+    margin: 10px 0 0 0;
+    font-size: 24px;
+    color: var(--heading-color);
+  }
+  
+  .hero .btn-get-started {
+    background-color: var(--accent-color);
+    color: var(--default-color);
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 10px 40px;
+    margin: 30px 0 0 0;
+    border-radius: 4px;
+    transition: 0.5s;
+  }
+  
+  .hero .btn-get-started:hover {
+    background: color-mix(in srgb, var(--accent-color) 90%, white 15%);
+  }
+  
+  @media (max-width: 768px) {
+    .hero h2 {
+      font-size: 32px;
+    }
+  
+    .hero p {
+      font-size: 18px;
+    }
+  }
+  
+  /*--------------------------------------------------------------
+  # What We Do Section
+  --------------------------------------------------------------*/
+  .what-we-do .why-box {
+    color: var(--contrast-color);
+    background: var(--accent-color);
+    padding: 30px;
+  }
+  
+  .what-we-do .why-box h3 {
+    color: var(--contrast-color);
+    font-weight: 700;
+    font-size: 34px;
+    margin-bottom: 30px;
+  }
+  
+  .what-we-do .why-box p {
+    margin-bottom: 30px;
+  }
+  
+  .what-we-do .why-box .more-btn {
+    display: inline-block;
+    background: color-mix(in srgb, var(--contrast-color), transparent 85%);
+    padding: 8px 40px 10px 40px;
+    color: var(--contrast-color);
+    transition: all ease-in-out 0.4s;
+    border-radius: 50px;
+  }
+  
+  .what-we-do .why-box .more-btn i {
+    font-size: 14px;
+  }
+  
+  .what-we-do .why-box .more-btn:hover {
+    color: var(--accent-color);
+    background: var(--surface-color);
+  }
+  
+  .what-we-do .icon-box {
+    background-color: var(--surface-color);
+    text-align: center;
+    padding: 40px 30px;
+    width: 100%;
+    height: 100%;
+    border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  }
+  
+  .what-we-do .icon-box i {
+    color: var(--accent-color);
+    margin-bottom: 30px;
+    font-size: 32px;
+    margin-bottom: 30px;
+    background: color-mix(in srgb, var(--accent-color), transparent 95%);
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    transition: 0.3s;
+  }
+  
+  .what-we-do .icon-box h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 30px 0;
+  }
+  
+  .what-we-do .icon-box p {
+    font-size: 15px;
+    color: color-mix(in srgb, var(--default-color), transparent 30%);
+  }
+  
+  .what-we-do .icon-box:hover i {
+    color: var(--contrast-color);
+    background: var(--accent-color);
+  }
+  
+  /*--------------------------------------------------------------
+  # About Section
+  --------------------------------------------------------------*/
+  .about .about-content h3 {
+    font-weight: 700;
+    font-size: 26px;
+  }
+  
+  .about .about-content ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .about .about-content ul li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 35px;
+  }
+  
+  .about .about-content ul li:first-child {
+    margin-top: 35px;
+  }
+  
+  .about .about-content ul i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    font-size: 32px;
+    color: #fff;
+    background: var(--accent-color);
+    margin-right: 15px;
+    line-height: 0;
+    border-radius: 5px;
+  }
+  
+  .about .about-content ul h4 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .about .about-content ul p {
+    font-size: 15px;
+  }
+  
+  .about .about-content p:last-child {
+    margin-bottom: 0;
+  }
+  
+
+
+
+
+
+
+
+  
+  /*--------------------------------------------------------------
+  # Testimonials Section
+  --------------------------------------------------------------*/
+  .testimonials .testimonial-item {
+    background-color: var(--surface-color);
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    box-sizing: content-box;
+    padding: 30px;
+    margin: 30px 15px;
+    position: relative;
+    height: 100%;
+  }
+  
+  .testimonials .testimonial-item .testimonial-img {
+    width: 90px;
+    border-radius: 50px;
+    margin-right: 15px;
+  }
+  
+  .testimonials .testimonial-item h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+  }
+  
+  .testimonials .testimonial-item h4 {
+    font-size: 14px;
+    color: color-mix(in srgb, var(--default-color), transparent 40%);
+    margin: 0;
+  }
+  
+  .testimonials .testimonial-item .stars {
+    margin: 10px 0;
+  }
+  
+  .testimonials .testimonial-item .stars i {
+    color: #ffc107;
+    margin: 0 1px;
+  }
+  
+  .testimonials .testimonial-item .quote-icon-left,
+  .testimonials .testimonial-item .quote-icon-right {
+    color: color-mix(in srgb, var(--accent-color), transparent 50%);
+    font-size: 26px;
+    line-height: 0;
+  }
+  
+  .testimonials .testimonial-item .quote-icon-left {
+    display: inline-block;
+    left: -5px;
+    position: relative;
+  }
+  
+  .testimonials .testimonial-item .quote-icon-right {
+    display: inline-block;
+    right: -5px;
+    position: relative;
+    top: 10px;
+    transform: scale(-1, -1);
+  }
+  
+  .testimonials .testimonial-item p {
+    font-style: italic;
+    margin: 15px auto 15px auto;
+  }
+  
+  .testimonials .swiper-wrapper {
+    height: auto;
+  }
+  
+  .testimonials .swiper-pagination {
+    margin-top: 20px;
+    position: relative;
+  }
+  
+  .testimonials .swiper-pagination .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background-color: color-mix(in srgb, var(--default-color), transparent 85%);
+    opacity: 1;
+  }
+  
+  .testimonials .swiper-pagination .swiper-pagination-bullet-active {
+    background-color: var(--accent-color);
+  }
+  
+  @media (max-width: 767px) {
+    .testimonials .testimonial-wrap {
+      padding-left: 0;
+    }
+  
+    .testimonials .testimonial-item {
+      padding: 30px;
+      margin: 15px;
+    }
+  
+    .testimonials .testimonial-item .testimonial-img {
+      position: static;
+      left: auto;
+    }
+  }
+ 

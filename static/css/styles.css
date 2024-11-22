@@ -1,0 +1,79 @@
+
+input, select, textarea, button {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.registration-btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.registration-btn:hover {
+    background-color: #0056b3;
+}
+
+.requirements {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #555;
+}
+
+.requirements ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.requirements li {
+    margin-bottom: 10px;
+}
+
+/* Error, Warning, and Success Styles */
+.error, .warning {
+    font-size: 14px;
+    color: #d9534f; /* Red for errors */
+}
+
+.warning {
+    color: #f0ad4e; /* Yellow for warnings */
+}
+
+.success {
+    font-size: 14px;
+    color: #5bc0de; /* Blue for success */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .registration-container {
+        flex-direction: column;
+    }
+
+    .left-column, .right-column {
+        flex: 1;
+    }
+
+    .registration-page {
+        padding: 0;
+    }
+
+    .registration-container {
+        max-width: 100%;
+    }
+}
