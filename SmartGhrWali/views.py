@@ -50,7 +50,7 @@ def purchases(request):
             purchase.user = request.user  # Associate the purchase with the current user
             purchase.save()
             messages.success(request, 'Purchase has been added successfully!')
-            return redirect('purchases')  
+            return redirect('SmartGhrWali:purchases')
     else:
         form = PurchaseForm()
 
@@ -66,7 +66,7 @@ def delete_purchase(request, purchase_id):
     purchase = get_object_or_404(Purchase, id=purchase_id, user=request.user)
     purchase.delete()
     messages.success(request, 'Purchase has been deleted successfully!')
-    return redirect('purchases')
+    return redirect('SmartGhrWali:purchases')
 
 @login_required
 def usages(request):
@@ -81,7 +81,7 @@ def usages(request):
             usage.user = request.user 
             usage.save()
             messages.success(request, 'Usage has been added successfully!')
-            return redirect('usages')
+            return redirect('SmartGhrWali:usages')
     else:
         form = UsageForm()
 
@@ -97,7 +97,7 @@ def delete_usage(request, usage_id):
     usage = get_object_or_404(Usage, id=usage_id, user=request.user)
     usage.delete()
     messages.success(request, 'Usage has been deleted successfully!')
-    return redirect('usages')
+    return redirect('SmartGhrWali:usages')
 
 
 @login_required
