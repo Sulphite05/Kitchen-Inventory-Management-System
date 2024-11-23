@@ -9,59 +9,60 @@ Smart Ghr Wali
 <link rel="stylesheet" href="/static/css/homepage.css">
 <!-- <h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1> -->
 
-<div class="card  shadow p-3 bg-body roundedp-5 m-3 ">
+<div class="card    p-3 bg-body roundedp-5 m-3 ">
  <h4 class="mb-4 fw-bold">INVENTORY</h4>
  <div class="row g-3">
       <!-- Total items Card -->
       <div class="col-md-3">
         <div class="card mb-3 p-3 shadow text-center">
-            <div class="d-flex align-items-center justify-content-center mb-3">
+            <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#128176;</div>
                 <h5 class="mb-0">Total Items</h5>
             </div>
-            <!-- Centered large text -->
-            <h2 class="my-3">53</h2>
+            <h1 class="my-3">53</h1>
         </div>
     </div>
 
     <div class="col-md-3">
         <div class="card mb-3 p-3 shadow text-center">
-            <div class="d-flex align-items-center justify-content-center mb-3">
+            <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#128722;</div>
                 <h5 class="mb-0">High Stock </h5>
             </div>
-            <h2 class="my-3">18</h2>
+            <h1 class="my-3">18</h1>
         </div>
     </div>
     
       <div class="col-md-3">
         <div class="card mb-3 p-3 shadow text-center">
-          <div class="d-flex align-items-center justify-content-center mb-3">
+          <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#10060;</div>
                 <h5 class="mb-0">Out of Stock </h5>
             </div>
-            <h2 class="my-3">11</h2>
+            <h1 class="my-3">11</h1>
         </div>
     </div>
     
       <div class="col-md-3">
         <div class="card mb-3 p-3 shadow text-center">
-            <div class="d-flex align-items-center justify-content-center mb-3">
+            <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#9888;</div>
                 <h5 class="mb-0">Low Stock</h5>
             </div>
-            <h2 class="my-3">24</h2>
+            <h1 class="my-3">24</h1>
         </div>
     </div>
     
     </div>
     </div>
+    
     <div class="container">
-        <button id="toggleItemsBtn" class="btn btn-info mb-3">Select Items to Generate Recipes</button>
-    </div>
+
+            <button id="toggleItemsBtn" class="btn btn-info width 50">Select Items to Generate Recipes</button>
+        </div>
 <!-- Button to Show/Hide Items -->
  <section>
-    <div class="card  shadow p-3  bg-body roundedp-5 m-3">
+    <div class="card  p-3  bg-body roundedp-5 m-3">
 
 <h4 class=" mb-4 fw-bold">ALL CATEGORIES</h4>
 
@@ -75,7 +76,7 @@ Smart Ghr Wali
             <h6 class="mb-0 fw-bold">{{ category.name }} ({{ category.item_set.count }} items)</h6>
         
             <!-- Button aligned to the right -->
-            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
+            <button class="btn btn-success btn-sm" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapse-{{ category.id }}" aria-expanded="false" 
                 aria-controls="collapse-{{ category.id }}" style="width: auto;">
                 Show Items
@@ -85,8 +86,8 @@ Smart Ghr Wali
         <!-- Collapsible section for the items, initially hidden -->
         <div class="collapse" id="collapse-{{ category.id }}">
             <div class="card-body">
-                <table class="table table-striped">
-                    <thead align="center">
+                <table class="table table-striped ">
+                    <thead align="center" class="table-dark">
                         <tr>
                             <th scope="col" class="select-header" style="display: none;">Select</th> <!-- Initially hidden -->
                             <th scope="col">Item Name</th>
