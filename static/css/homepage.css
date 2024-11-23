@@ -683,3 +683,37 @@
     }
   }
  
+/*--------------------------------------------------------------
+# Team Section
+--------------------------------------------------------------*/
+.team .person {
+  position: relative;
+}
+
+.team .person figure {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.team .person img {
+  transition: 0.3s all ease;
+}
+
+.team .person .person-contents {
+  text-align: center;
+}
+
+.team .person .person-contents h3 {
+  color: var(--heading-color);
+  font-size: 24px;
+}
+
+.social {
+      display: flex;
+      justify-content: center; /* Center the icons horizontally */
+      gap: 10px;               /* Optional: adds space between the icons */
+  }
+
