@@ -14,40 +14,40 @@ Smart Ghr Wali
  <div class="row g-3">
       <!-- Total items Card -->
       <div class="col-md-3">
-        <div class="card mb-3 p-3 shadow text-center">
+        <div class="card text-bg-info mb-3 p-3 shadow text-center">
             <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#128176;</div>
-                <h5 class="mb-0">Total Items</h5>
+                <h4 class="mb-0 ">Total Items</h4>
             </div>
             <h1 class="my-3">53</h1>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card mb-3 p-3 shadow text-center">
+        <div class="card text-bg-success mb-3 p-3 shadow text-center">
             <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#128722;</div>
-                <h5 class="mb-0">High Stock </h5>
+                <h4 class="mb-0">High Stock </h4>
             </div>
             <h1 class="my-3">18</h1>
         </div>
     </div>
     
       <div class="col-md-3">
-        <div class="card mb-3 p-3 shadow text-center">
+        <div class="card text-bg-danger mb-3 p-3 shadow text-center">
           <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#10060;</div>
-                <h5 class="mb-0">Out of Stock </h5>
+                <h4 class="mb-0">Out of Stock </h4>
             </div>
             <h1 class="my-3">11</h1>
         </div>
     </div>
     
       <div class="col-md-3">
-        <div class="card mb-3 p-3 shadow text-center">
+        <div class="card  text-bg-warning mb-3 p-3 shadow text-center">
             <div class="d-flex align-items-center justify-content-center ">
                 <div class="icon text-orange me-2" style="font-size: 1.5rem;">&#9888;</div>
-                <h5 class="mb-0">Low Stock</h5>
+                <h4 class="mb-0">Low Stock</h4>
             </div>
             <h1 class="my-3">24</h1>
         </div>
@@ -55,17 +55,22 @@ Smart Ghr Wali
     
     </div>
     </div>
-    
-    <div class="container">
 
-            <button id="toggleItemsBtn" class="btn btn-info width 50">Select Items to Generate Recipes</button>
-        </div>
+ 
 <!-- Button to Show/Hide Items -->
  <section>
     <div class="card  p-3  bg-body roundedp-5 m-3">
 
-<h4 class=" mb-4 fw-bold">ALL CATEGORIES</h4>
+<!-- <h4 class=" mb-4 fw-bold">ALL CATEGORIES</h4> -->
 
+    <div class="row">
+      <div class="col-8 align-items-start"> 
+        <h4 class=" mb-4 fw-bold">ALL CATEGORIES</h4>
+
+      </div>
+      <div class="col-4">            <button id="toggleItemsBtn" class="btn btn-info width 50">Select Items to Generate Recipes</button>
+      </div>
+    </div>
 <!-- Recipe Form with Checkboxes -->
 <form method="POST" action="{% url 'SmartGhrWali:fetch_recipes' %}" id="recipeForm">
     {% csrf_token %}
@@ -76,7 +81,7 @@ Smart Ghr Wali
             <h6 class="mb-0 fw-bold">{{ category.name }} ({{ category.item_set.count }} items)</h6>
         
             <!-- Button aligned to the right -->
-            <button class="btn btn-success btn-sm" type="button" data-bs-toggle="collapse"
+            <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapse-{{ category.id }}" aria-expanded="false" 
                 aria-controls="collapse-{{ category.id }}" style="width: auto;">
                 Show Items
