@@ -10,11 +10,7 @@
     --background-color: #ffffff; /* Background color for the entire website, including individual sections */
     --default-color: #444444; /* Default color used for the majority of the text content across the entire website */
     --heading-color: #384046; /* Color for headings, subheadings and title throughout the website */
-<<<<<<< HEAD
-    --accent-color: #4f9c2b; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
-=======
-    --accent-color: #07caca; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
->>>>>>> 1de8ae28aa178d47b05c7a5df95ff70beb79c94a
+    --accent-color: #000000; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
     --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
     --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
   }
