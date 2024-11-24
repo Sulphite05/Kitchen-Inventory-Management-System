@@ -20,7 +20,7 @@ Smart Ghr Wali
                   <div class="icon-box d-flex flex-column justify-content-center align-items-center">
                     <i class="bi bi-box-seam"></i>
                     <h4>Total Items Stock</h4>
-                    <h1>180</h1>
+                    <h1>{{ total_stock }}</h1>
                   </div>
                 </div>
                 <!-- Icon Box 2 -->
@@ -28,7 +28,7 @@ Smart Ghr Wali
                   <div class="icon-box d-flex flex-column justify-content-center align-items-center">
                     <i class="bi-arrow-up-circle"></i>
                     <h4>High Stock Items</h4>
-                    <h1>80</h1>
+                    <h1>{{ high_stock }}</h1>
                   </div>
                 </div>
                 <!-- Icon Box 3 -->
@@ -36,7 +36,7 @@ Smart Ghr Wali
                   <div class="icon-box d-flex flex-column justify-content-center align-items-center">
                     <i class="bi-arrow-down-circle"></i>
                     <h4>Low Stock Items</h4>
-                    <h1>100</h1>
+                    <h1>{{ low_stock }}</h1>
                   </div>
                 </div>
                 <!-- Icon Box 4 -->
@@ -44,18 +44,12 @@ Smart Ghr Wali
                   <div class="icon-box d-flex flex-column justify-content-center align-items-center">
                     <i class="bi-x-circle"></i>
                     <h4>Items Out Of Stock</h4>
-                    <h1>20</h1>
+                    <h1>{{ out_of_stock }}</h1>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
-        </div>
-      </div>
-      
-    
-   
-    
+        </section>
     </div>
     </div>
 
@@ -183,3 +177,5 @@ Smart Ghr Wali
 </script>
 
 {% endblock %}
+
+
