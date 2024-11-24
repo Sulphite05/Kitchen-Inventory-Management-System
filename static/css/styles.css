@@ -1,15 +1,23 @@
-input, select, textarea {
+input, select, textarea{
     padding: 12px 20px;
     margin-bottom: 15px;
     border-radius: 5px;
     border: 1px solid #ddd;
     font-size: 16px;
     box-sizing: border-box;
-    
+    width: 100%;
+
+}
+button {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 input:focus, select:focus, textarea:focus {
-    border-color: #007BFF;
+    border-color: #000305;
     outline: none;
 }
 
