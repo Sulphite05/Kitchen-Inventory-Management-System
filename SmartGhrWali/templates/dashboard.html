@@ -6,50 +6,53 @@ Smart Ghr Wali
 
 {% block content %}
 <link rel="stylesheet" href="/static/css/dashboard.css">
-<link rel="stylesheet" href="/static/css/homepage.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <!-- <h1 class="text-center mt-4">Welcome to Smart Ghr Wali</h1> -->
 
 <div class="card  p-3 bg-body roundedp-5 m-3 ">
  <h4 class="mb-4 fw-bold">Inventory</h4>
  <div class="row g-3">
-      <!-- Total items Card -->
-      <div class="col-md-3">
-        <div class="card text-bg-info mb-3 p-1 shadow text-center">
-            <div class="d-flex align-items-center justify-content-center ">
-                <div class=" me-2" style="font-size: 1.5rem;"><img src="/static/images/total items.png" alt="" width="40" height="30"></div>
-                <h4 class="mb-0 ">Total Stock</h4>
+    <section id="what-we-do" class="what-we-do section">
+        <div class="container">
+            <div class="row justify-content-center gy-4">
+                <!-- Icon Box 1 -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi bi-box-seam"></i>
+                    <h4>Total Items Stock</h4>
+                    <h1>180</h1>
+                  </div>
+                </div>
+                <!-- Icon Box 2 -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi-arrow-up-circle"></i>
+                    <h4>High Stock Items</h4>
+                    <h1>80</h1>
+                  </div>
+                </div>
+                <!-- Icon Box 3 -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi-arrow-down-circle"></i>
+                    <h4>Low Stock Items</h4>
+                    <h1>100</h1>
+                  </div>
+                </div>
+                <!-- Icon Box 4 -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi-x-circle"></i>
+                    <h4>Items Out Of Stock</h4>
+                    <h1>20</h1>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h1 class="my-3">253</h1>
+          </section>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-bg-success mb-3 p-1 shadow text-center">
-            <div class="d-flex align-items-center justify-content-center ">
-                <div class=" me-2" style="font-size: 1.5rem;"><img src="/static/images/high stock.png" alt="" width="40" height="30"></div>
-                <h4 class="mb-0">High Stock </h4>
-            </div>
-            <h1 class="my-3">180</h1>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card  text-bg-warning mb-3 p-1 shadow text-center">
-            <div class="d-flex align-items-center justify-content-center ">
-                <div class=" me-3" style="font-size: 1.5rem;"><img src="/static/images/low-stock.png" alt="" width="40" height="30"></div>
-                <h4 class="mb-0">Low Stock</h4>
-            </div>
-            <h1 class="my-3">24</h1>
-        </div>
-    </div>
-      <div class="col-md-3">
-        <div class="card text-bg-danger mb-3 p-1 shadow text-center">
-          <div class="d-flex align-items-center justify-content-center ">
-            <div class=" me-3" style="font-size: 1.5rem;"><img src="/static/images/out-of-stock.png" alt="" width="40" height="30"></div>
-            <h4 class=" mb-0">Out of Stock </h4>
-            </div>
-            <h1 class="my-3">11</h1>
-        </div>
-    </div>
+      </div>
+      
     
    
     
@@ -63,14 +66,14 @@ Smart Ghr Wali
 
 <!-- <h4 class=" mb-4 fw-bold">ALL CATEGORIES</h4> -->
 
-    <div class="row">
-      <div class="col-8 align-items-start"> 
-        <h4 class=" mb-4 fw-bold">All Categories</h4>
-
-      </div>
-      <div class="col-4">            <button id="toggleItemsBtn" class="btn btn-info width 50">Select Items to Generate Recipes</button>
-      </div>
+<div class="row align-items-center mb-4">
+    <div class="col-8">
+      <h4 class="fw-bold">All Categories</h4>
     </div>
+    <div class="col-4 text-end">
+      <a href="#" class="btn-generate-recipe">Generate Recipe</a>
+    </div>
+  </div>
 <!-- Recipe Form with Checkboxes -->
 <form method="POST" action="{% url 'SmartGhrWali:fetch_recipes' %}" id="recipeForm">
     {% csrf_token %}
