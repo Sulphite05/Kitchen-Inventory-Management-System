@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Category, Purchase, Usage
 from django.utils.timezone import timedelta, now, datetime
 from.forms import PurchaseForm, UsageForm, UserRegistrationForm
-from django.db.models import Prefetch, Avg, Sum, F
+from django.db.models import Prefetch, Avg, Sum, F, Count
 from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models.functions import TruncMonth
@@ -34,8 +34,32 @@ def register(request):
 
 @login_required
 def dashboard(request):
-    categories = Category.objects.prefetch_related(Prefetch('item_set', queryset=Item.objects.filter(user=request.user)))
-    return render(request, 'dashboard.html', {'categories': categories})
+    categories = Category.objects.prefetch_related(
+        Prefetch('item_set', queryset=Item.objects.filter(user=request.user))
+    )
+
+    # Calculate total stock, high stock, low stock, and out of stock
+    total_stock = Item.objects.filter(user=request.user).aggregate(total=Count('id'))['total']
+
+    high_stock = Item.objects.filter(
+        user=request.user, curr_quantity__gte=F('min_quantity')
+    ).aggregate(count=Count('id'))['count']
+
+    low_stock = Item.objects.filter(
+        user=request.user, curr_quantity__lt=F('min_quantity')
+    ).aggregate(count=Count('id'))['count']
+
+    out_of_stock = Item.objects.filter(
+        user=request.user, curr_quantity=0
+    ).aggregate(count=Count('id'))['count']
+
+    return render(request, 'dashboard.html', {
+        'categories': categories,
+        'total_stock': total_stock,
+        'high_stock': high_stock,
+        'low_stock': low_stock,
+        'out_of_stock': out_of_stock,
+    })
 
 @login_required
 def purchases(request):
