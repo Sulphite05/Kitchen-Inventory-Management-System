@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from SmartGhrWali.models import Item, Category, Purchase
+from .models import Item, Category, Purchase
 from django.utils import timezone
 
 class ItemModelTestCase(TestCase):
@@ -48,6 +48,7 @@ class RegistrationAndViewItemsIntegrationTest(TestCase):
         self.assertContains(response, 'Carrot')
         self.assertContains(response, 'Vegetables')
         self.assertContains(response, 'Carrot')
+
 
 class AddItemAndViewInDashboardIntegrationTest(TestCase):
     def setUp(self):
