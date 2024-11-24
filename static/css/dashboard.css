@@ -20,12 +20,12 @@
   /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
   
   .light-background {
-    --background-color: #ffffff;
+    --background-color: #f7fbfe;
     --surface-color: #ffffff;
   }
   
   .dark-background {
-    --background-color: #000000;
+    --background-color: #1d222d;
     --default-color: #ffffff;
     --heading-color: #ffffff;
     --surface-color: #484849;
@@ -369,54 +369,10 @@
   }
   
   /*--------------------------------------------------------------
-  # Hero Section
+  # Generate Recipe Button 
   --------------------------------------------------------------*/
-  .hero {
-    width: 100%;
-    min-height: 60vh;
-    position: relative;
-    padding: 80px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .hero img {
-    position: absolute;
-    inset: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1;
-  }
-  
-  .hero:before {
-    content: "";
-    /* background: color-mix(in srgb, var(--background-color), transparent 30%); */
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-  }
-  
-  .hero .container {
-    position: relative;
-    z-index: 3;
-  }
-  
-  .hero h2 {
-    margin: 0;
-    font-size: 48px;
-    font-weight: 700;
-  }
-  
-  .hero p {
-    margin: 10px 0 0 0;
-    font-size: 24px;
-    color: var(--heading-color);
-  }
-  
-  .hero .btn-get-started {
+  /* Styling for Generate Recipe Button */
+.btn-generate-recipe {
     background-color: var(--accent-color);
     color: var(--default-color);
     font-weight: 400;
@@ -425,103 +381,77 @@
     text-transform: uppercase;
     display: inline-block;
     padding: 10px 40px;
-    margin: 30px 0 0 0;
     border-radius: 4px;
     transition: 0.5s;
   }
   
-  .hero .btn-get-started:hover {
+  .btn-generate-recipe:hover {
     background: color-mix(in srgb, var(--accent-color) 90%, white 15%);
   }
   
+  /* Responsive Alignment */
   @media (max-width: 768px) {
-    .hero h2 {
-      font-size: 32px;
-    }
-  
-    .hero p {
-      font-size: 18px;
+    .row .col-4.text-end {
+      text-align: left;
+      margin-top: 10px; /* Add space below the heading for smaller screens */
     }
   }
+  
   
   /*--------------------------------------------------------------
   # What We Do Section
   --------------------------------------------------------------*/
-  .what-we-do .why-box {
-    color: var(--contrast-color);
-    background: var(--accent-color);
-    padding: 30px;
+/* Main Card */
+.card {
+    background-color: var(--bg-color, #f8f9fa); /* Optional: change as needed */
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px;
   }
   
-  .what-we-do .why-box h3 {
-    color: var(--contrast-color);
-    font-weight: 700;
-    font-size: 34px;
-    margin-bottom: 30px;
-  }
-  
-  .what-we-do .why-box p {
-    margin-bottom: 30px;
-  }
-  
-  .what-we-do .why-box .more-btn {
-    display: inline-block;
-    background: color-mix(in srgb, var(--contrast-color), transparent 85%);
-    padding: 8px 40px 10px 40px;
-    color: var(--contrast-color);
-    transition: all ease-in-out 0.4s;
-    border-radius: 50px;
-  }
-  
-  .what-we-do .why-box .more-btn i {
-    font-size: 14px;
-  }
-  
-  .what-we-do .why-box .more-btn:hover {
-    color: var(--accent-color);
-    background: var(--surface-color);
-  }
-  
+  /* What We Do Section */
   .what-we-do .icon-box {
-    background-color: var(--surface-color);
+    background-color: var(--surface-color, #ffffff);
     text-align: center;
-    padding: 40px 30px;
-    width: 100%;
-    height: 100%;
-    border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+    padding: 15px; /* Reduced padding for less height */
+    border-radius: 10px; /* Slightly rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
   
   .what-we-do .icon-box i {
-    color: var(--accent-color);
-    margin-bottom: 30px;
-    font-size: 32px;
-    margin-bottom: 30px;
-    background: color-mix(in srgb, var(--accent-color), transparent 95%);
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 72px;
-    height: 72px;
-    transition: 0.3s;
+    color: var(--accent-color, #007bff); /* Icon color */
+    font-size: 28px; /* Icon size */
+    margin-bottom: 10px;
   }
   
   .what-we-do .icon-box h4 {
-    font-size: 20px;
+    font-size: 16px; /* Title size */
     font-weight: 700;
-    margin: 0 0 30px 0;
+    margin: 10px 0;
   }
   
-  .what-we-do .icon-box p {
-    font-size: 15px;
-    color: color-mix(in srgb, var(--default-color), transparent 30%);
+  .what-we-do .icon-box h1 {
+    font-size: 24px; /* Number size */
+    color: var(--primary-text-color, #000);
+    margin: 0;
   }
   
-  .what-we-do .icon-box:hover i {
-    color: var(--contrast-color);
-    background: var(--accent-color);
+  .what-we-do .icon-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Lift on hover */
   }
   
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .what-we-do .icon-box {
+      padding: 10px; /* Adjust padding for smaller screens */
+    }
+    .what-we-do .icon-box h1 {
+      font-size: 20px; /* Adjust number size */
+    }
+  }
+    
   /*--------------------------------------------------------------
   # About Section
   --------------------------------------------------------------*/
